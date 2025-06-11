@@ -9,7 +9,7 @@
 ## solodroid-ads-sdk
 Android library for displaying multiple Ad Networks developed by [solodroid](https://solodroid.co.id/)
 
-### Step 1: Add repositories
+### Step 1: Add repositorie
 Add it in your root `settings.gradle (Project Settings)` at the end of repositories:
 ```gradle
 pluginManagement {
