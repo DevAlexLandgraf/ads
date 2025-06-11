@@ -23,7 +23,6 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.solodroidx.ads.listener.OnShowAdCompleteListener;
-import com.ironsource.mediationsdk.integration.IntegrationHelper;
 
 public class AppOpenAd {
 
