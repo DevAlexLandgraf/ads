@@ -19,22 +19,9 @@ dependencyResolutionManagement {
         maven { url 'https://cboost.jfrog.io/artifactory/chartboost-ads/' }
         maven { url 'https://maven.ogury.co' }
         maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea' }
     }
 }
 rootProject.name = "MasterAdsSdk"
 include ':app'
-include ':admob-ads-sdk'
-include ':facebook-ads-sdk'
-include ':applovin-ads-sdk'
-include ':startapp-ads-sdk'
-include ':unity-ads-sdk'
 include ':ironsource-ads-sdk'
-include ':wortise-ads-sdk'
-include ':pangle-ads-sdk'
-include ':huawei-ads-sdk'
-include ':yandex-ads-sdk'
-include ':multi-ads-sdk'
-include ':multi-ads-sdk-no-is'
-include ':mega-ads-sdk'
-include ':mega-ads-sdk-no-is'
-include ':no-ads-sdk'
