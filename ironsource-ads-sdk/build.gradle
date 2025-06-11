@@ -30,14 +30,32 @@ dependencies {
 
     //Primary Ad Networks
     implementation 'com.google.android.gms:play-services-ads:24.3.0'
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.9.0'
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.9.1'
     implementation 'com.unity3d.ads-mediation:adquality-sdk:7.25.0'
+    implementation 'com.applovin:applovin-sdk:13.2.0'
+    implementation 'com.vungle:vungle-ads:7.5.0'
+    implementation 'com.facebook.android:audience-network-sdk:6.20.0'
+    implementation 'com.mbridge.msdk.oversea:mbridge_android_sdk:16.9.71'
+    implementation 'com.unity3d.ads:unity-ads:4.15.0'
+    implementation 'com.inmobi.monetization:inmobi-ads-kotlin:10.8.3'
 
     //AdMob mediation
-    //implementation 'com.google.ads.mediation:ironsource:8.7.0.1'
+    implementation  'com.google.ads.mediation:applovin:13.3.0.0'
+    implementation  'com.google.ads.mediation:inmobi:10.8.3.1'
+    implementation  'com.google.ads.mediation:ironsource:8.9.0.0'
+    implementation  'com.google.ads.mediation:vungle:7.5.0.0'
+    implementation  'com.google.ads.mediation:facebook:6.20.0.0'
+    implementation  'com.google.ads.mediation:mintegral:16.9.71.0'
+    implementation  'com.google.ads.mediation:unity:4.15.0.0'
 
     //ironSource mediation
-    implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.50'
+    implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.51'
+    implementation 'com.unity3d.ads-mediation:applovin-adapter:4.3.53'
+    implementation 'com.unity3d.ads-mediation:vungle-adapter:4.3.30'
+    implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.50'
+    implementation 'com.unity3d.ads-mediation:mintegral-adapter:4.3.41'
+    implementation 'com.unity3d.ads-mediation:unityads-adapter:4.3.55'
+    implementation 'com.unity3d.ads-mediation:inmobi-adapter:4.3.30' 
 
     //GDPR
     implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
