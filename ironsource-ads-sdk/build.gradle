@@ -29,6 +29,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:18.1.0'
 
     //Primary Ad Networks
+    implementation 'com.google.android.gms:play-services-ads:24.3.0'
     implementation 'com.unity3d.ads-mediation:mediation-sdk:8.9.1'
     implementation 'com.unity3d.ads-mediation:adquality-sdk:7.25.0'
     
@@ -37,5 +38,4 @@ dependencies {
 
     //GDPR
     implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
-
 }
