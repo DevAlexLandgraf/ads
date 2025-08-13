@@ -20,10 +20,10 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
+import com.ironsource.mediationsdk.levelplay.LevelPlayAdInfo;
+import com.ironsource.mediationsdk.levelplay.LevelPlayInterstitialAd;
+import com.ironsource.mediationsdk.levelplay.LevelPlayInterstitialAdListener;
 import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
 import com.solodroidx.ads.listener.OnInterstitialAdDismissedListener;
 import com.solodroidx.ads.util.Tools;
 
@@ -34,6 +34,7 @@ public class InterstitialAd {
     private final Activity activity;
     private com.google.android.gms.ads.interstitial.InterstitialAd adMobInterstitialAd;
     private AdManagerInterstitialAd adManagerInterstitialAd;
+    private LevelPlayInterstitialAd ironSourceInterstitialAd;
     private int retryAttempt;
     private int counter = 1;
 
@@ -258,9 +259,10 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
+                    ironSourceInterstitialAd = new LevelPlayInterstitialAd(ironSourceInterstitialId);
+                    ironSourceInterstitialAd.setListener(new LevelPlayInterstitialAdListener() {
                         @Override
-                        public void onAdReady(AdInfo adInfo) {
+                        public void onAdLoaded(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdReady");
                         }
 
@@ -271,36 +273,36 @@ public class InterstitialAd {
                         }
 
                         @Override
-                        public void onAdOpened(AdInfo adInfo) {
+                        public void onAdDisplayed(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdOpened");
                         }
 
                         @Override
-                        public void onAdShowSucceeded(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowSucceeded");
-                        }
-
-                        @Override
-                        public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
+                        public void onAdDisplayFailed(IronSourceError ironSourceError, LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdShowFailed" + " " + ironSourceError);
                             loadBackupInterstitialAd();
                         }
 
                         @Override
-                        public void onAdClicked(AdInfo adInfo) {
+                        public void onAdClicked(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdClicked");
                         }
 
                         @Override
-                        public void onAdClosed(AdInfo adInfo) {
+                        public void onAdClosed(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdClosed");
                             loadInterstitialAd();
                             if (withListener) {
                                 onInterstitialAdDismissedListener.onInterstitialAdDismissed();
                             }
                         }
+
+                        @Override
+                        public void onAdInfoChanged(LevelPlayAdInfo levelPlayAdInfo) {
+                            //optional
+                        }
                     });
-                    IronSource.loadInterstitial();
+                    ironSourceInterstitialAd.loadAd();
                     break;
 
                 default:
@@ -397,9 +399,10 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
+                    ironSourceInterstitialAd = new LevelPlayInterstitialAd(ironSourceInterstitialId);
+                    ironSourceInterstitialAd.setListener(new LevelPlayInterstitialAdListener() {
                         @Override
-                        public void onAdReady(AdInfo adInfo) {
+                        public void onAdLoaded(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdReady");
                         }
 
@@ -409,35 +412,35 @@ public class InterstitialAd {
                         }
 
                         @Override
-                        public void onAdOpened(AdInfo adInfo) {
+                        public void onAdDisplayed(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdOpened");
                         }
 
                         @Override
-                        public void onAdShowSucceeded(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowSucceeded");
-                        }
-
-                        @Override
-                        public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
+                        public void onAdDisplayFailed(IronSourceError ironSourceError, LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdShowFailed" + " " + ironSourceError);
                         }
 
                         @Override
-                        public void onAdClicked(AdInfo adInfo) {
+                        public void onAdClicked(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdClicked");
                         }
 
                         @Override
-                        public void onAdClosed(AdInfo adInfo) {
+                        public void onAdClosed(LevelPlayAdInfo levelPlayAdInfo) {
                             Log.d(TAG, "onInterstitialAdClosed");
                             loadInterstitialAd();
                             if (withListener) {
                                 onInterstitialAdDismissedListener.onInterstitialAdDismissed();
                             }
                         }
+
+                        @Override
+                        public void onAdInfoChanged(LevelPlayAdInfo levelPlayAdInfo) {
+                            //optional
+                        }
                     });
-                    IronSource.loadInterstitial();
+                    ironSourceInterstitialAd.loadAd();
                     break;
 
                 case NONE:
@@ -475,8 +478,8 @@ public class InterstitialAd {
 
                     case IRONSOURCE:
                     case FAN_BIDDING_IRONSOURCE:
-                        if (IronSource.isInterstitialReady()) {
-                            IronSource.showInterstitial(ironSourceInterstitialId);
+                        if (ironSourceInterstitialAd != null && ironSourceInterstitialAd.isAdReady()) {
+                            ironSourceInterstitialAd.showAd(activity, ironSourceInterstitialId);
                         } else {
                             showBackupInterstitialAd();
                         }
@@ -524,8 +527,8 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    if (IronSource.isInterstitialReady()) {
-                        IronSource.showInterstitial(ironSourceInterstitialId);
+                    if (ironSourceInterstitialAd != null && ironSourceInterstitialAd.isAdReady()) {
+                        ironSourceInterstitialAd.showAd(activity, ironSourceInterstitialId);
                     } else {
                         if (withListener) {
                             onInterstitialAdDismissedListener.onInterstitialAdDismissed();
