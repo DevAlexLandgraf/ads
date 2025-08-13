@@ -34,7 +34,9 @@ dependencies {
     implementation 'com.unity3d.ads-mediation:adquality-sdk:7.25.0'
 
     //AdMob mediation
-    implementation  'com.google.ads.mediation:ironsource:8.9.0.0'
+    implementation('com.google.ads.mediation:ironsource:8.9.0.0') {
+        exclude group: 'com.ironsource.sdk', module: 'mediationsdk'
+    }
     
     //ironSource mediation
     implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.51'
