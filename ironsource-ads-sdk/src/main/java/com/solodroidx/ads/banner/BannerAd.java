@@ -20,12 +20,10 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-import com.ironsource.mediationsdk.ISBannerSize;
-import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.LevelPlayBannerAdView;
+import com.ironsource.mediationsdk.LevelPlayBannerAdViewListener;
+import com.ironsource.mediationsdk.LevelPlayAdError;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
-import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.sdk.LevelPlayBannerListener;
 import com.solodroidx.ads.R;
 import com.solodroidx.ads.util.Tools;
 
@@ -36,8 +34,8 @@ public class BannerAd {
     private final Activity activity;
     private AdView adView;
     private AdManagerAdView adManagerAdView;
-    FrameLayout ironSourceBannerView;
-    private IronSourceBannerLayout ironSourceBannerLayout;
+    FrameLayout bannerView;
+    private LevelPlayBannerAdView levelPlayBannerAdView;
 
     private String adStatus = "";
     private String adNetwork = "";
@@ -221,22 +219,21 @@ public class BannerAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    ironSourceBannerView = activity.findViewById(R.id.ironsource_banner_view_container);
-                    ISBannerSize size = ISBannerSize.BANNER;
-                    ironSourceBannerLayout = IronSource.createBanner(activity, size);
+                    bannerView = activity.findViewById(R.id.ironsource_banner_view_container);
+                    levelPlayBannerAdView = new LevelPlayBannerAdView(activity, ironSourceBannerId);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-                    ironSourceBannerView.addView(ironSourceBannerLayout, 0, layoutParams);
-                    if (ironSourceBannerLayout != null) {
-                        ironSourceBannerLayout.setLevelPlayBannerListener(new LevelPlayBannerListener() {
+                    bannerView.addView(levelPlayBannerAdView, 0, layoutParams);
+                    if (levelPlayBannerAdView != null) {
+                        levelPlayBannerAdView.setListener(new LevelPlayBannerAdViewListener() {
                             @Override
                             public void onAdLoaded(AdInfo adInfo) {
                                 Log.d(TAG, "onBannerAdLoaded");
-                                ironSourceBannerView.setVisibility(View.VISIBLE);
+                                bannerView.setVisibility(View.VISIBLE);
                             }
 
                             @Override
-                            public void onAdLoadFailed(IronSourceError ironSourceError) {
-                                Log.d(TAG, "onBannerAdLoadFailed" + " " + ironSourceError.getErrorMessage());
+                            public void onAdLoadFailed(@NonNull LevelPlayAdError error) {
+                                Log.d(TAG, "onBannerAdLoadFailed" + " " + error.getErrorMessage());
                                 loadBackupBannerAd();
                             }
 
@@ -246,23 +243,23 @@ public class BannerAd {
                             }
 
                             @Override
+                            public void onAdExpanded(AdInfo adInfo) {
+                                Log.d(TAG, "onBannerAdExpanded");
+                            }
+
+                            @Override
+                            public void onAdCollapsed(AdInfo adInfo) {
+                                Log.d(TAG, "onBannerAdCollapsed");
+                            }
+
+                            @Override
                             public void onAdLeftApplication(AdInfo adInfo) {
                                 Log.d(TAG, "onBannerAdLeftApplication");
                             }
-
-                            @Override
-                            public void onAdScreenPresented(AdInfo adInfo) {
-                                Log.d(TAG, "onBannerAdScreenPresented");
-                            }
-
-                            @Override
-                            public void onAdScreenDismissed(AdInfo adInfo) {
-                                Log.d(TAG, "onBannerAdScreenDismissed");
-                            }
                         });
-                        IronSource.loadBanner(ironSourceBannerLayout, ironSourceBannerId);
+                        levelPlayBannerAdView.loadAd();
                     } else {
-                        Log.d(TAG, "IronSource.createBanner returned null");
+                        Log.d(TAG, "LevelPlayBannerAdView creation failed");
                     }
                     break;
             }
@@ -328,22 +325,21 @@ public class BannerAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    ironSourceBannerView = activity.findViewById(R.id.ironsource_banner_view_container);
-                    ISBannerSize size = ISBannerSize.BANNER;
-                    ironSourceBannerLayout = IronSource.createBanner(activity, size);
+                    bannerView = activity.findViewById(R.id.ironsource_banner_view_container);
+                    levelPlayBannerAdView = new LevelPlayBannerAdView(activity, ironSourceBannerId);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-                    ironSourceBannerView.addView(ironSourceBannerLayout, 0, layoutParams);
-                    if (ironSourceBannerLayout != null) {
-                        ironSourceBannerLayout.setLevelPlayBannerListener(new LevelPlayBannerListener() {
+                    bannerView.addView(levelPlayBannerAdView, 0, layoutParams);
+                    if (levelPlayBannerAdView != null) {
+                        levelPlayBannerAdView.setListener(new LevelPlayBannerAdViewListener() {
                             @Override
                             public void onAdLoaded(AdInfo adInfo) {
                                 Log.d(TAG, "onBannerAdLoaded");
-                                ironSourceBannerView.setVisibility(View.VISIBLE);
+                                bannerView.setVisibility(View.VISIBLE);
                             }
 
                             @Override
-                            public void onAdLoadFailed(IronSourceError ironSourceError) {
-                                Log.d(TAG, "onBannerAdLoadFailed" + " " + ironSourceError.getErrorMessage());
+                            public void onAdLoadFailed(@NonNull LevelPlayAdError error) {
+                                Log.d(TAG, "onBannerAdLoadFailed" + " " + error.getErrorMessage());
                             }
 
                             @Override
@@ -352,23 +348,23 @@ public class BannerAd {
                             }
 
                             @Override
+                            public void onAdExpanded(AdInfo adInfo) {
+                                Log.d(TAG, "onBannerAdExpanded");
+                            }
+
+                            @Override
+                            public void onAdCollapsed(AdInfo adInfo) {
+                                Log.d(TAG, "onBannerAdCollapsed");
+                            }
+
+                            @Override
                             public void onAdLeftApplication(AdInfo adInfo) {
                                 Log.d(TAG, "onBannerAdLeftApplication");
                             }
-
-                            @Override
-                            public void onAdScreenPresented(AdInfo adInfo) {
-                                Log.d(TAG, "onBannerAdScreenPresented");
-                            }
-
-                            @Override
-                            public void onAdScreenDismissed(AdInfo adInfo) {
-                                Log.d(TAG, "onBannerAdScreenDismissed");
-                            }
                         });
-                        IronSource.loadBanner(ironSourceBannerLayout, ironSourceBannerId);
+                        levelPlayBannerAdView.loadAd();
                     } else {
-                        Log.d(TAG, "IronSource.createBanner returned null");
+                        Log.d(TAG, "LevelPlayBannerAdView creation failed");
                     }
                     break;
 
@@ -385,12 +381,12 @@ public class BannerAd {
     public void destroyAndDetachBanner() {
         if (adStatus.equals(AD_STATUS_ON) && placementStatus != 0) {
             if (adNetwork.equals(IRONSOURCE) || backupAdNetwork.equals(IRONSOURCE)) {
-                if (ironSourceBannerView != null) {
-                    Log.d(TAG, "ironSource banner is not null, ready to destroy");
-                    IronSource.destroyBanner(ironSourceBannerLayout);
-                    ironSourceBannerView.removeView(ironSourceBannerLayout);
+                if (bannerView != null) {
+                    Log.d(TAG, "banner is not null, ready to destroy");
+                    levelPlayBannerAdView.destroy();
+                    bannerView.removeView(levelPlayBannerAdView);
                 } else {
-                    Log.d(TAG, "ironSource banner is null");
+                    Log.d(TAG, "banner is null");
                 }
             }
         }

@@ -20,10 +20,11 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.LevelPlay;
+import com.ironsource.mediationsdk.LevelPlayInterstitialAd;
+import com.ironsource.mediationsdk.LevelPlayInterstitialAdListener;
+import com.ironsource.mediationsdk.LevelPlayAdError;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
-import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
 import com.solodroidx.ads.listener.OnInterstitialAdDismissedListener;
 import com.solodroidx.ads.util.Tools;
 
@@ -34,6 +35,7 @@ public class InterstitialAd {
     private final Activity activity;
     private com.google.android.gms.ads.interstitial.InterstitialAd adMobInterstitialAd;
     private AdManagerInterstitialAd adManagerInterstitialAd;
+    private LevelPlayInterstitialAd interstitialAd;
     private int retryAttempt;
     private int counter = 1;
 
@@ -124,6 +126,7 @@ public class InterstitialAd {
 
     public InterstitialAd setIronSourceInterstitialId(String ironSourceInterstitialId) {
         this.ironSourceInterstitialId = ironSourceInterstitialId;
+        this.interstitialAd = new LevelPlayInterstitialAd(activity, ironSourceInterstitialId);
         return this;
     }
 
@@ -258,31 +261,26 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
+                    interstitialAd.setListener(new LevelPlayInterstitialAdListener() {
                         @Override
-                        public void onAdReady(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdReady");
+                        public void onAdLoaded(AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdLoaded");
                         }
 
                         @Override
-                        public void onAdLoadFailed(IronSourceError ironSourceError) {
-                            Log.d(TAG, "onInterstitialAdLoadFailed" + " " + ironSourceError);
+                        public void onAdLoadFailed(@NonNull LevelPlayAdError error) {
+                            Log.d(TAG, "onInterstitialAdLoadFailed" + " " + error.getErrorMessage());
                             loadBackupInterstitialAd();
                         }
 
                         @Override
-                        public void onAdOpened(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdOpened");
+                        public void onAdDisplayed(AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdDisplayed");
                         }
 
                         @Override
-                        public void onAdShowSucceeded(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowSucceeded");
-                        }
-
-                        @Override
-                        public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowFailed" + " " + ironSourceError);
+                        public void onAdDisplayFailed(@NonNull LevelPlayAdError error, AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdDisplayFailed" + " " + error.getErrorMessage());
                             loadBackupInterstitialAd();
                         }
 
@@ -300,7 +298,7 @@ public class InterstitialAd {
                             }
                         }
                     });
-                    IronSource.loadInterstitial();
+                    interstitialAd.loadAd();
                     break;
 
                 default:
@@ -397,30 +395,25 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
+                    interstitialAd.setListener(new LevelPlayInterstitialAdListener() {
                         @Override
-                        public void onAdReady(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdReady");
+                        public void onAdLoaded(AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdLoaded");
                         }
 
                         @Override
-                        public void onAdLoadFailed(IronSourceError ironSourceError) {
-                            Log.d(TAG, "onInterstitialAdLoadFailed" + " " + ironSourceError);
+                        public void onAdLoadFailed(@NonNull LevelPlayAdError error) {
+                            Log.d(TAG, "onInterstitialAdLoadFailed" + " " + error.getErrorMessage());
                         }
 
                         @Override
-                        public void onAdOpened(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdOpened");
+                        public void onAdDisplayed(AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdDisplayed");
                         }
 
                         @Override
-                        public void onAdShowSucceeded(AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowSucceeded");
-                        }
-
-                        @Override
-                        public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
-                            Log.d(TAG, "onInterstitialAdShowFailed" + " " + ironSourceError);
+                        public void onAdDisplayFailed(@NonNull LevelPlayAdError error, AdInfo adInfo) {
+                            Log.d(TAG, "onInterstitialAdDisplayFailed" + " " + error.getErrorMessage());
                         }
 
                         @Override
@@ -437,7 +430,7 @@ public class InterstitialAd {
                             }
                         }
                     });
-                    IronSource.loadInterstitial();
+                    interstitialAd.loadAd();
                     break;
 
                 case NONE:
@@ -475,8 +468,8 @@ public class InterstitialAd {
 
                     case IRONSOURCE:
                     case FAN_BIDDING_IRONSOURCE:
-                        if (IronSource.isInterstitialReady()) {
-                            IronSource.showInterstitial(ironSourceInterstitialId);
+                        if (interstitialAd.isAdReady()) {
+                            interstitialAd.showAd(activity);
                         } else {
                             showBackupInterstitialAd();
                         }
@@ -524,8 +517,8 @@ public class InterstitialAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    if (IronSource.isInterstitialReady()) {
-                        IronSource.showInterstitial(ironSourceInterstitialId);
+                    if (interstitialAd.isAdReady()) {
+                        interstitialAd.showAd(activity);
                     } else {
                         if (withListener) {
                             onInterstitialAdDismissedListener.onInterstitialAdDismissed();

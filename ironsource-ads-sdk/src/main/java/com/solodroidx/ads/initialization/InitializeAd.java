@@ -14,7 +14,10 @@ import android.util.Log;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
-import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.LevelPlay;
+import com.ironsource.mediationsdk.LevelPlayInitRequest;
+import com.ironsource.mediationsdk.LevelPlayInitListener;
+import com.ironsource.mediationsdk.LevelPlayAdError;
 
 import java.util.Map;
 
@@ -134,14 +137,18 @@ public class InitializeAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    String advertisingId = IronSource.getAdvertiserId(activity);
-                    IronSource.setUserId(advertisingId);
-                    IronSource.init(activity, ironSourceAppKey, () -> {
-                        Log.d(TAG, "[" + adNetwork + "] initialize complete");
+                    LevelPlayInitRequest initRequest = LevelPlayInitRequest.builder(ironSourceAppKey).build();
+                    LevelPlay.init(initRequest, new LevelPlayInitListener() {
+                        @Override
+                        public void onInitSuccess() {
+                            Log.d(TAG, "[" + adNetwork + "] initialize complete");
+                        }
+
+                        @Override
+                        public void onInitFailed(@NonNull LevelPlayAdError error) {
+                            Log.d(TAG, "[" + adNetwork + "] initialize failed: " + error.getErrorMessage());
+                        }
                     });
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.REWARDED_VIDEO);
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.INTERSTITIAL);
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.BANNER);
                     break;
             }
             Log.d(TAG, "[" + adNetwork + "] is selected as Primary Ads");
@@ -167,14 +174,18 @@ public class InitializeAd {
 
                 case IRONSOURCE:
                 case FAN_BIDDING_IRONSOURCE:
-                    String advertisingId = IronSource.getAdvertiserId(activity);
-                    IronSource.setUserId(advertisingId);
-                    IronSource.init(activity, ironSourceAppKey, () -> {
-                        Log.d(TAG, "[" + adNetwork + "] initialize complete");
+                    LevelPlayInitRequest initRequest = LevelPlayInitRequest.builder(ironSourceAppKey).build();
+                    LevelPlay.init(initRequest, new LevelPlayInitListener() {
+                        @Override
+                        public void onInitSuccess() {
+                            Log.d(TAG, "[" + backupAdNetwork + "] initialize complete");
+                        }
+
+                        @Override
+                        public void onInitFailed(@NonNull LevelPlayAdError error) {
+                            Log.d(TAG, "[" + backupAdNetwork + "] initialize failed: " + error.getErrorMessage());
+                        }
                     });
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.REWARDED_VIDEO);
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.INTERSTITIAL);
-//                        IronSource.init(activity, ironSourceAppKey, IronSource.AD_UNIT.BANNER);
                     break;
 
                 case NONE:
