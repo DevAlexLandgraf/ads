@@ -38,5 +38,4 @@ dependencies {
 
     //GDPR
     implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
-
 }
