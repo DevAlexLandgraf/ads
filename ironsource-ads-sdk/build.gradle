@@ -30,7 +30,7 @@ dependencies {
 
     //Primary Ad Networks
     implementation 'com.google.android.gms:play-services-ads:24.3.0'
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.9.1'
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.12.0'
     implementation 'com.unity3d.ads-mediation:adquality-sdk:7.25.0'
     
     //ironSource mediation
