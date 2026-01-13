@@ -1,10 +1,4 @@
-<div align="center">
-  <a href="https://solodroid.co.id/">
-    <picture>
-      <img src="https://raw.githubusercontent.com/solodroidev/content/uploads/images/logo.png" alt="Solodroid Logo" height="70">
-    </picture>
-  </a>
-</div>
+
 
 ### Step 1: Add repositorie
 Add it in your root `settings.gradle (Project Settings)` at the end of repositories:
